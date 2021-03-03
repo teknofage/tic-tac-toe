@@ -11,6 +11,7 @@ import random
 
 BOARD_SIZE = 10
 
+
 def draw_board(board):
     """This function prints out the board that it was passed."""
 
@@ -27,6 +28,7 @@ def draw_board(board):
     print(' ' + board[1] + ' | ' + board[2] + ' | ' + board[3])
     print('   |   |')
 
+
 def input_player_letter():
     """Lets the player type which letter they want to be.
     Returns a list with the player’s letter as the first item, and the computer's letter as the second."""
@@ -41,20 +43,37 @@ def input_player_letter():
     else:                       
         return ['O', 'X']
 
+
 def who_goes_first():
     """Randomly choose the player who goes first."""
     if random.randint(0, 1) == 0:
         return 'computer'
     else:                       
         return 'player'
+    
+    
+def player_turn(play_board, play_letter, comp_letter):
+    """Get the player's move and make the changes to the board"""
+    draw_board(play_board)
+    play_move = get_player_move(play_board)
+    make_move(play_board, play_letter, play_move)
+    
+    
+def computer_turn(comp_board, play_letter, comp_letter):
+    """Get the computer's move and make the changes to the board"""
+    comp_move = get_computer_move(comp_board, comp_letter)
+    make_move(comp_board, comp_letter, comp_move)
+
 
 def play_again():
     """This function returns True if the player wants to play again, otherwise it returns False."""
     print('Do you want to play again? (yes or no)')
     return input().lower().startswith('y')
 
+
 def make_move(board, letter, move):
     board[move] = letter
+
 
 def is_winner(bo, le):
     """Given a board and a player’s letter, this function returns True if that player has won.
@@ -70,6 +89,7 @@ def is_winner(bo, le):
         (bo[9] == le and bo[5] == le and bo[1] == le)   # diagonal
         ) 
 
+
 def get_board_copy(board):
     """Make a duplicate of the board list and return it the duplicate."""
     dupeBoard = []
@@ -79,9 +99,11 @@ def get_board_copy(board):
 
     return dupeBoard
 
+
 def in_space_free(board, move):
     """Return true if the passed move is free on the passed board."""
     return board[move] == ' '
+
 
 def get_player_move(board):
     """Let the player type in their move."""
@@ -90,6 +112,7 @@ def get_player_move(board):
         print('What is your next move? (1-9)')
         next_turn = input()
     return int(next_turn)
+
 
 def choose_random_move_from_list(board, movesList):
     """Returns a valid move from the passed list on the passed board.
@@ -102,6 +125,7 @@ def choose_random_move_from_list(board, movesList):
     if possible_moves: 
         return random.choice(possible_moves)
     return None
+
 
 def get_computer_move(board, ai_team): 
     """Given a board and the computer's letter, determine where to move and return that move."""
@@ -139,35 +163,31 @@ def get_computer_move(board, ai_team):
     # Move on one of the sides.
     return choose_random_move_from_list(board, [2, 4, 6, 8])
 
-def game_is_playing(turn):
-	draw_board(the_board)
-	move = get_computer_move(the_board, ai_team)
-	make_move(the_board, ai_team, move)
 
-    if is_board_full(the_board):
-        draw_board(the_board)
-		print('The game is a tie!')
-		return False
-    
-    elif turn is 'player':
-		# Player’s turn.
-		if is_winner(the_board, player_team):
-			draw_board(the_board)
-			print('Hooray! You have won the game!')
-			return False
-		elif:
-			turn = 'computer'
-			return True
+def is_game_playing(given_turn, given_board, given_play_letter, given_comp_letter):
+    """See whether the game is playing by:
+        Checking if there is a winner,
+        Check whether there is a tie"""
+    player_has_won = is_winner(given_board, given_play_letter)
+    computer_has_won = is_winner(given_board, given_comp_letter)
+    tie_game = is_board_full(given_board)
+    # Check if there is a winner
+    # if either of the players is_winner returns true
+    if player_has_won or computer_has_won:
+        draw_board(given_board)
+        if given_turn == 'player': 
+            print('Hooray! You have won the game!') # End game if it's the player's turn
+        else:
+            print('The computer has beaten you! You Lose.') # End game if it's the computer's turn
+        return False
+    if tie_game:
+        # if there is a tie
+        draw_board(given_board) 
+        print('The game is a tie!')
+        # the game ends
+        return False
+    return True
 
-	else:
-		# Computer’s turn.
-		if is_winner(the_board, ai_team):
-			draw_board(the_board)
-			print('The computer has beaten you! You lose.')
-			return = False
-		elif: 
-			turn = 'player'
-			return True
 
 def is_board_full(board):
     """Return True if every space on the board has been taken. Otherwise return False."""
@@ -178,19 +198,31 @@ def is_board_full(board):
 
 
 print('Welcome to Tic Tac Toe!')
-
-# TODO: The following mega code block is a huge hairy monster. Break it down 
+# The following mega code block is a huge hairy monster. Break it down 
 # into smaller methods. Use TODO s and the comment above each section as a guide 
 # for refactoring.
-
 while True:
     # Reset the board
+    board_size = 10
+    # Stored 10 inside of board_size
     the_board = [' '] * BOARD_SIZE 
     player_team, ai_team = input_player_letter()
     turn = who_goes_first()
     print('The ' + turn + ' will go first.')
-    
-    game_is_playing() == True 
-
+    while True: 
+        # Player's turn.
+        if turn == 'player':
+            player_turn(the_board, player_team, ai_team)
+            if is_game_playing(turn, the_board, player_team, ai_team):
+                turn = 'computer'
+            else:
+                break
+        # Computer's turn.
+        else:
+            computer_turn(the_board, player_team, ai_team)
+            if is_game_playing(turn, the_board, player_team, ai_team):
+                turn = 'player'
+            else:
+                break
     if not play_again():
         break
