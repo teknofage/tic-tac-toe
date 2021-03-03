@@ -76,7 +76,7 @@ def make_move(board, letter, move):
 
 
 def is_winner(bo, le):
-    """Given a board and a player’s letter, this function returns True if that player has won.
+    """current a board and a player’s letter, this function returns True if that player has won.
     We use bo instead of board and le instead of letter so we don’t have to type as much."""
     return (
         (bo[7] == le and bo[8] == le and bo[9] == le) or # across the top
@@ -128,8 +128,8 @@ def choose_random_move_from_list(board, movesList):
 
 
 def get_computer_move(board, ai_team): 
-    """Given a board and the computer's letter, determine where to move and return that move."""
-    if ai_team is 'X':
+    """current a board and the computer's letter, determine where to move and return that move."""
+    if ai_team == 'X':
         player_team = 'O'
     else:
         player_team = 'X'
@@ -164,25 +164,25 @@ def get_computer_move(board, ai_team):
     return choose_random_move_from_list(board, [2, 4, 6, 8])
 
 
-def is_game_playing(given_turn, given_board, given_play_letter, given_comp_letter):
+def is_game_playing(current_turn, current_board, current_play_letter, current_comp_letter):
     """See whether the game is playing by:
         Checking if there is a winner,
         Check whether there is a tie"""
-    player_has_won = is_winner(given_board, given_play_letter)
-    computer_has_won = is_winner(given_board, given_comp_letter)
-    tie_game = is_board_full(given_board)
+    player_has_won = is_winner(current_board, current_play_letter)
+    computer_has_won = is_winner(current_board, current_comp_letter)
+    tie_game = is_board_full(current_board)
     # Check if there is a winner
     # if either of the players is_winner returns true
     if player_has_won or computer_has_won:
-        draw_board(given_board)
-        if given_turn == 'player': 
+        draw_board(current_board)
+        if current_turn == 'player': 
             print('Hooray! You have won the game!') # End game if it's the player's turn
         else:
             print('The computer has beaten you! You Lose.') # End game if it's the computer's turn
         return False
     if tie_game:
         # if there is a tie
-        draw_board(given_board) 
+        draw_board(current_board) 
         print('The game is a tie!')
         # the game ends
         return False
