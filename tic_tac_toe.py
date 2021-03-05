@@ -52,14 +52,14 @@ def who_goes_first():
         return 'player'
     
     
-def player_turn(play_board, play_letter, comp_letter):
+def player_turn(player_board, player_letter, comp_letter):
     """Get the player's move and make the changes to the board"""
-    draw_board(play_board)
-    play_move = get_player_move(play_board)
-    make_move(play_board, play_letter, play_move)
+    draw_board(player_board)
+    play_move = get_player_move(player_board)
+    make_move(player_board, player_letter, play_move)
     
     
-def computer_turn(comp_board, play_letter, comp_letter):
+def computer_turn(comp_board, player_letter, comp_letter):
     """Get the computer's move and make the changes to the board"""
     comp_move = get_computer_move(comp_board, comp_letter)
     make_move(comp_board, comp_letter, comp_move)
@@ -164,11 +164,11 @@ def get_computer_move(board, ai_team):
     return choose_random_move_from_list(board, [2, 4, 6, 8])
 
 
-def is_game_playing(current_turn, current_board, current_play_letter, current_comp_letter):
+def is_game_playing(current_turn, current_board, current_player_letter, current_comp_letter):
     """See whether the game is playing by:
         Checking if there is a winner,
         Check whether there is a tie"""
-    player_has_won = is_winner(current_board, current_play_letter)
+    player_has_won = is_winner(current_board, current_player_letter)
     computer_has_won = is_winner(current_board, current_comp_letter)
     tie_game = is_board_full(current_board)
     # Check if there is a winner
